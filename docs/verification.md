@@ -11,4 +11,6 @@
 
 The CSV fixture is synthetic and uses the vendor-documented worksheet export format with explicit column mapping. No live customer export, instrument feed or customer-system access was used. This is a bounded process statistics base, not a full Minitab implementation or a validated regulated-release system.
 
-The GitHub workflow declares Windows and Linux jobs on Node 20 and 22. Its remote execution status will be recorded after the private push. Local checks establish Linux and PostgreSQL behaviour; a workflow declaration alone does not verify Windows execution.
+GitHub workflow [40811686475](https://github.com/Enterprise-DNA-OS/process-statistics-for-claude-code/actions/runs/40811686475) did not start any test steps. Its annotation reports failed recent account payments or a spending-limit block. Windows jobs were cancelled before running. Linux and PostgreSQL were verified locally; Windows execution remains unverified. No billing setting was changed.
+
+The private repository is pushed on main. Landing Pages commit 035c5abcc3b1ab5788607dee01930c7ac2d64cd4 pushed the Minitab page with live=false. The rendered preview is noindex,nofollow. The public URL returned HTTP 404 immediately after push, so host deployment is pending and is not claimed as verified. The registry is drafted with repo=remote, page=pushed, public=false and live=false. The runner owns the Command Centre registry commit and publication.
