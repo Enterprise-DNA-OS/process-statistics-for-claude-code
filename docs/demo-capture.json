@@ -1,0 +1,24 @@
+{
+  "captured_at": "2026-10-29T03:18:28.809Z",
+  "baseline_id": "b57bc03b-0679-4ba4-ae09-c567c57cb9c3",
+  "screens": [
+    {
+      "title": "Weekly attention",
+      "ask": "Which investigations and reviews are overdue?",
+      "command": "node scripts/stats.mjs attention",
+      "output": "finding                id                                    record                           owner              due       \n---------------------  ------------------------------------  -------------------------------  -----------------  ----------\nprocess review due     10000000-0000-4000-8000-000000000001  Bottle fill                      Demo quality lead  2026-10-26\ndata review due        30000000-0000-4000-8000-000000000002  Fill week                        Demo quality lead  2026-10-27\noverdue investigation  40000000-0000-4000-8000-000000000001  Check fill excursion on Shift B  Demo quality lead  2026-10-28"
+    },
+    {
+      "title": "Shift comparison",
+      "ask": "Which shift contains the largest fill measurement?",
+      "command": "node scripts/stats.mjs batches \"--series=Fill week\"",
+      "output": "batch    n   missing  mean        sample_sd  min  max  median\n-------  --  -------  ----------  ---------  ---  ---  ------\nShift A  6   0        500.166667  0.752773   499  501  500   \nShift B  5   1        502.6       5.272571   500  512  500"
+    },
+    {
+      "title": "Fixed control limits",
+      "ask": "Which observations break our saved baseline limits?",
+      "command": "node scripts/stats.mjs control-chart \"--series=Fill week\" --baseline=b57bc03b-0679-4ba4-ae09-c567c57cb9c3",
+      "output": "n: 11\nmissing: 1\ncenter: 500\nmr_mean: 1\nwithin_sigma: 0.886525\nlower: 497.340426\nupper: 502.659574\nmr_upper: 3.267\n\nsignals\n=======\nrow  measured_at               value  rule                      \n---  ------------------------  -----  --------------------------\n8    2026-10-27T08:00:00.000Z  512    outside individuals limits\n\n\nmr_signals\n==========\nrow  value  rule                      \n---  -----  --------------------------\n8    12     outside moving range limit\n9    12     outside moving range limit\n\nbaseline: fixed saved baseline\n\nwarnings\n========\n- Fewer than 20 valid observations; exploratory limits\n- Missing values excluded; moving ranges do not bridge gaps\n- Only points outside three-sigma individuals and moving-range limits are tested. No normality or independence test."
+    }
+  ]
+}

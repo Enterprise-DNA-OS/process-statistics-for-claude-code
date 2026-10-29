@@ -1,115 +1,89 @@
-<h1 align="center">Process Statistics for Claude Code</h1>
+# Process Statistics for Claude Code
 
-<p align="center">
-  <strong>The open-source process statistics desk that is just a database and Claude Code.</strong>
-</p>
+Your measurements, control limits and investigations in a database you own. Built for the weekly process review. Works with Claude Code, Codex, OpenCode or Cursor.
 
-<p align="center">
-  Created by <a href="https://www.enterprisedna.co"><strong>Enterprise DNA</strong></a>. Free and open source. Works with Claude Code, Codex, OpenCode or Cursor.
-</p>
+| Do it yourself | We customise it | We run it for you |
+|---|---|---|
+| Free, MIT. Follow the quick start. | Your measurements, rules and Minitab worksheet data brought across. [Get your version built](https://enterprisedna.co/omni/book/?offer=replace-software&utm_source=github&utm_medium=readme&utm_campaign=minitab). | Installed and operated through Omni by Enterprise DNA. One setup fee, then a monthly retainer. [Talk to Sam](https://enterprisedna.co/omni/book/?offer=replace-software&utm_source=github&utm_medium=readme&utm_campaign=minitab). |
 
-<!-- three-doors -->
-<table align="center">
-  <tr>
-    <td align="center"><strong>Do it yourself</strong><br/>Clone it, run it, own it. Free, MIT.<br/><a href="#quick-start">Quick start</a></td>
-    <td align="center"><strong>We customise it</strong><br/>Your fields, your rules, your Minitab data brought across.<br/><a href="https://enterprisedna.co/omni/book/?utm_source=github&utm_medium=readme&utm_campaign=minitab">Book a call</a></td>
-    <td align="center"><strong>We run it for you</strong><br/>Installed, connected and operated inside Omni. Setup fee, then a retainer.<br/><a href="https://enterprisedna.co/omni/instead-of/minitab?utm_source=github&utm_medium=readme&utm_campaign=minitab">How it works</a></td>
-  </tr>
-</table>
+Minitab lists Solution Center Core at US$2,394 per named user annually, before taxes. [Vendor pricing](https://www.minitab.com/en-us/try-buy/), checked 29 October 2026. This is a published licence price, not a customer invoice or an equivalent-service savings claim.
 
-<p align="center">
-  <a href="#what-is-this">What is this</a> &bull;
-  <a href="#why-no-front-end">Why no front end</a> &bull;
-  <a href="#quick-start">Quick start</a> &bull;
-  <a href="#the-commands">Commands</a> &bull;
-  <a href="#instead-of-minitab">Instead of Minitab</a> &bull;
-  <a href="#want-it-installed-and-run-for-you">Installed for you</a> &bull;
-  <a href="#license">License</a>
-</p>
-
-<p align="center">
-  <img src="https://img.shields.io/badge/Node-20+-339933?style=flat-square" alt="Node 20+" />
-  <img src="https://img.shields.io/badge/PostgreSQL-any-336791?style=flat-square" alt="PostgreSQL" />
-  <img src="https://img.shields.io/badge/PGlite-embedded-3ecf8e?style=flat-square" alt="PGlite" />
-  <img src="https://img.shields.io/badge/License-MIT-yellow?style=flat-square" alt="MIT License" />
-</p>
-
----
-
-## What is this
-
-Process Statistics for Claude Code does the job you pay Minitab for, as a Postgres database and a set of agent commands. There is no web front end. You open the folder in [Claude Code](https://claude.com/claude-code) (or Codex, OpenCode, Cursor: see `AGENTS.md`) and ask for what you want in plain language. It runs the right query, and it can answer questions the Minitab dashboard cannot.
-
-<!-- TODO(author): the annual bill. One sentence: what a 10 to 50 person business typically pays Minitab per year, all in, with a source. -->
-
-Want the same thing with a web front end, or built on a different stack? That is a customisation, and it is exactly what Enterprise DNA does: [book a call](https://enterprisedna.co/omni/book/?utm_source=github&utm_medium=readme&utm_campaign=minitab).
-
-<!-- TODO(author): two or three sentences on what this specific product covers and who it is for. -->
-
-## Why no front end
-
-- The front end was only ever there because the database was hard to talk to. That is no longer true.
-- Your data sits in plain Postgres tables you own. Any tool can read them. No export, no lock-in.
-- No seats, no tiers, no add-ons. Read [docs/why-no-front-end.md](docs/why-no-front-end.md) for the honest trade-offs too.
+This free base calculates descriptive statistics, individuals and moving-range signals, and overall Pp/Ppk. It keeps source rows, saved results, specification revisions and investigation notes. It does not implement every Minitab procedure. No batch release, legal certification or regulated validation is claimed. [Methods and assumptions](docs/methods.md).
 
 ## Quick start
 
-Sixty seconds, no database install (an embedded Postgres runs inside Node):
+Node 20 or later.
 
 ```bash
 git clone https://github.com/Enterprise-DNA-OS/process-statistics-for-claude-code.git
 cd process-statistics-for-claude-code
 npm install
+npm test
 npm run demo
+npm run view
+npm run docs
 ```
 
-Then open the folder in Claude Code and type a slash command. <!-- TODO(author): name the first command to try. -->
+Demo data is fictional: a fill excursion, a missing observation, a sparse torque study, overdue reviews and an overdue investigation. Seed only a demo database. PGlite persists under .data/db; DATA_DIR selects another location. DATABASE_URL selects Postgres. For actual records, start with an empty database and npm run migrate, then import your worksheet. Never commit connection strings or private data.
 
-### Use it with your own Postgres or Supabase
+## The weekly review
 
-Copy `.env.example` to `.env`, set `DATABASE_URL`, then `npm run migrate`. Same commands, shared data, no per-seat fee.
+Ask /weekly-review to combine the process overview, overdue work and record checks. Read /batches to compare shifts, /control-chart to find exceptional observations, and /capability for overall performance with explicit assumptions. Use /add-action and /log to record the actual investigation. Drafts never send.
 
-## The commands
+```bash
+npm run stats -- analyse --series="Fill baseline" --method=individuals --actor="Demo operator" --evidence="Fictional baseline for the demonstration"
+npm run stats -- control-chart --series="Fill week" --baseline=<returned-analysis-id>
+npm run stats -- capability --series="Fill week"
+```
 
-<!-- TODO(author): a table of the slash commands in .claude/commands and what each one does. -->
+Replace the placeholder with the saved analysis identifier. Fixed limits let later observations be tested against that baseline. With no baseline, limits are estimated from the current series and labelled accordingly. Missing observations break moving-range adjacency. A number is never an approval.
 
-| Command | What it does |
+## Commands
+
+29 CLI operations and 31 agent command recipes. Human output by default and --json for machines. Case-insensitive names and partial identifiers resolve records; ambiguous choices list candidates and exit 1. [Full CLI](docs/cli.md). Every runtime shares .claude/commands.
+
+## Ten questions your own records answer
+
+These combine process data, specification history, owners and review rules. They are executable questions, not an unsupported claim that Minitab cannot answer them.
+
+| Question | Read command |
 |---|---|
-| `/...` | ... |
+| Which processes have overdue investigations and an overdue process review? | weekly-review |
+| Which imported series have missing measurements? | compliance |
+| Which later observations break the limits from our saved baseline? | control-chart --series="Fill week" --baseline=<saved-id> |
+| Which shift contains the largest observed fill value? | batches --series="Fill week" |
+| How many valid observations support this capability number? | capability --series="Fill week" |
+| Which saved results still refer to the previous specification revision? | analyses, then draft-analysis --analysis=<saved-id> |
+| Which imports came from the same source and mapping fingerprints? | imports |
+| Who recorded a specification change and why? | specifications |
+| Which source records are due for a retention review? | compliance |
+| Which investigations are closed with recorded evidence? | actions |
 
-## Instead of Minitab
+## Your first hour: ten things to ask for
 
-<!-- TODO(author): how to bring data across from Minitab; link docs/replace-minitab.md -->
+1. Show the processes and their units.
+2. Find overdue investigations.
+3. Count missing observations in the latest series.
+4. Compare the two demo shifts.
+5. Save an individuals baseline from the fictional measurements.
+6. Check the later series against those fixed limits.
+7. Explain the assumptions behind overall Pp/Ppk.
+8. Trial my worksheet export with an explicit mapping.
+9. Add a machine identifier using /customise.
+10. Add a weekly operator report using /new-view.
 
-## Architecture
+## Switching and ownership
 
-```
-process-statistics-for-claude-code/
-  CLAUDE.md                 how the operator wants this run (routing table + house rules)
-  AGENTS.md                 the same, for Codex / OpenCode / Cursor / Gemini CLI
-  .claude/commands/         the slash commands
-  scripts/                  the CLI the commands drive
-  scripts/lib/db.mjs        one adapter: DATABASE_URL (pg) or embedded PGlite
-  supabase/migrations/      plain SQL schema
-  supabase/seed.sql         demo data
-  docs/                     the thesis and the migration guide
-```
+[Bring your Minitab CSV worksheet across](docs/replace-minitab.md) in one command after mapping its columns. A dry run validates all rows without writing. Repeated identical imports return the existing series. Source rows, checksums and mapping are retained. Binary projects, graphs, macros and advanced models need separate work and verification before switching.
 
-## Built for coding agents
+Eight domain tables and five reporting views support one CLI. Export writes a private archive of all domain records and refuses to overwrite files. Use database-native backups for recovery. Shared deployment requires authenticated access, backups and operational controls. [Record controls](docs/compliance.md).
 
-The database, CLI and command recipes work with Claude Code, Codex, OpenCode or Cursor. Ask your coding agent for a new command and have it implement and test the change against the same records.
+## Documents and views
 
-## Contributing
+Set business name, logo and colours in brand.json. npm run docs produces saved analysis and investigation records. npm run view renders review and control summaries from the database views. /draft-analysis and /draft-review write HTML to drafts/. Screens are read-only and nothing sends. [Why no front end](docs/why-no-front-end.md).
 
-Issues and pull requests are welcome. Keep the shape: plain SQL, a small CLI, a slash command per recurring job, no front end.
+## Validation
 
-## Want it installed and run for you?
+npm test exercises all 29 operations with disposable data, independent numeric expectations, malformed and repeat imports, fixed baseline signals, historical specifications, export protection and escaped report content. An optional TEST_DATABASE_URL selects a disposable empty Postgres database. CI declares Windows and Linux runs on Node 20 and 22. See docs/verification.md for the checks actually run.
 
-Enterprise DNA installs Process Statistics for Claude Code for your business, migrates your Minitab data, connects it to the rest of your tools, and runs it for you as part of **Omni**, our managed Command Center. One setup fee, then a monthly retainer.
-
-- Book a call: [enterprisedna.co/omni/book](https://enterprisedna.co/omni/book/?offer=replace-software&utm_source=github&utm_medium=readme&utm_campaign=minitab)
-- Read more: [enterprisedna.co/omni/instead-of/minitab](https://enterprisedna.co/omni/instead-of/minitab?utm_source=github&utm_medium=readme&utm_campaign=minitab)
-
-## License
-
-MIT. Copyright (c) 2026 Enterprise DNA.
+MIT. Copyright 2026 Enterprise DNA. Independent project, not affiliated with Minitab.

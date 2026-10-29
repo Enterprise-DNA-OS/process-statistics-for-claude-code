@@ -1,43 +1,51 @@
 # Process Statistics for Claude Code: operating instructions
 
-This file is the brain. Claude Code reads it at the start of every session. It says who this is for, how work gets done, and the one right way to do each recurring job.
+This is an owned process statistics desk for a process engineer or quality lead. Establish the business, operator, unit, approved specification and sampling plan before entering actual records. All demo processes, observations and people are fictional.
 
-## Who this is for
+Use the one CLI, npm run stats, with --json for machine reads. Read before writing. Never invent measurements, collection times, specifications, actors, approvals or investigation results. Names match case-insensitively and partial identifiers work; ambiguous references must stop for the operator to choose.
 
-- **Business:** [YOUR BUSINESS]
-- **Operator:** [YOUR NAME], [your role]
-- **What matters most:** [the one or two outcomes you care about]
+## One path per job
 
-Fill this in once. A worker with context knows. A worker without it guesses.
-
-## How to work
-
-1. **Take a brief, not a script.** The operator describes the outcome. You run the right command and present the answer.
-2. **Read before you write.** Before drafting anything about a record, read its full history first.
-3. **Plain language.** Short sentences. No filler. Numbers in tables.
-4. **Silent success, loud problems.** No play-by-play. Say what broke and what you did about it.
-5. **Stop at the line.** Anything that sends, deletes, or faces a customer waits for a yes in this session.
-
-## Routing table: one right way for each recurring job
-
-| When the operator asks for... | Use this |
+| Job | Command |
 |---|---|
-| <!-- TODO(author): one row per slash command --> | `/...` |
+| Read the process register | /processes |
+| Read measurement series and missing counts | /series |
+| Review specification history | /specifications |
+| Read saved analyses and their input fingerprints | /analyses |
+| Read investigation ownership and deadlines | /actions |
+| Read recorded observations | /notes |
+| Read local changes and declared actors | /activity |
+| Find overdue investigations and review dates | /attention |
+| Check measurement and record controls | /compliance |
+| Read the process review overview | /week |
+| Reconcile source and mapping fingerprints | /imports |
+| List supported CLI operations | /help |
+| Read one measurement series with its notes and actions | /show |
+| Read ordered observations | /measurements |
+| Summarise count, missing data and sample variation | /describe |
+| Calculate individuals and moving-range signals | /control-chart |
+| Calculate exploratory overall Pp and Ppk | /capability |
+| Compare descriptive results by batch or shift | /batches |
+| Review this week from three record checks | /weekly-review |
+| Register a process from supplied facts | /add-process |
+| Record a new specification revision | /set-spec |
+| Bring a Minitab worksheet across | /import |
+| Save a reproducible analysis and interpretation | /analyse |
+| Assign an investigation from supplied facts | /add-action |
+| Record a completed investigation | /close-action |
+| Record a factual process note | /log |
+| Write a portable private record archive | /export |
+| Draft a saved analysis document | /draft-analysis |
+| Draft the weekly process review | /draft-review |
+| Add a field or change a method | /customise |
+| Add a read-only report | /new-view |
 
-If an ask fits nothing here, run the CLI directly (`npm run <cli> -- --help`) and then propose a new command for it.
+## Boundaries
 
-## Hard rules
+Never send, change an instrument setting, certify a product, approve a batch or upload source data. Statistical outputs are conditional on sampling, stability and distribution assumptions. Read docs/methods.md before interpreting. The compliance command is a record checklist, not a legal or statistical certification. Actor names are declared text, not authentication. The database owner can edit the audit trail.
 
-- Never send email or messages from here. Draft to `drafts/`, a person sends.
-- Never delete records without an explicit yes in this session. Prefer marking closed or archived.
-- Never invent a record. If a name is ambiguous, list the candidates and ask.
-- The database is the source of truth. If the answer is not in it, say so.
+## Files and checks
 
-## Where things live
+scripts/stats.mjs is the one CLI. supabase/migrations contains versioned database changes. docs/replace-minitab.md owns the import procedure. docs/methods.md owns method definitions and limitations. docs/compliance.md cites record obligations. brand.json, views.json and documents.json render local reports. Every runtime uses .claude/commands; do not create a second library.
 
-- `scripts/` the CLI. `scripts/lib/db.mjs` picks `DATABASE_URL` (Postgres, Supabase) or the embedded database in `.data/`.
-- `supabase/migrations/` the schema, plain SQL. `npm run migrate` applies it.
-- `.claude/commands/` the slash commands. Add one every time the same ask comes twice.
-- `docs/` the thesis and the guide for moving off Minitab.
-
-Built by Enterprise DNA. Installed and run for you as part of Omni: https://enterprisedna.co/omni/instead-of/minitab
+Run npm test after changes. Tests always use disposable data and clear DATABASE_URL unless TEST_DATABASE_URL explicitly selects a disposable Postgres instance. Do not seed a real database. Keep source files, reports, archives and credentials out of git. Shared use requires access controls and operational validation.

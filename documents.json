@@ -1,11 +1,55 @@
 [
   {
-    "name": "example",
-    "title": "TODO(author): the first document this industry must produce",
-    "for_each": "select gen_random_uuid() as id, 'Example' as name",
+    "name": "analysis",
+    "title": "Saved process analysis",
+    "for_each": "SELECT a.id,s.name FROM analyses a JOIN series s ON s.id=a.series_id ORDER BY a.created_at",
     "file": "name",
     "sections": [
-      { "title": "Details", "sql": "select 'replace me' as item, $1::text as record_id" }
+      {
+        "title": "Method and interpretation",
+        "layout": "record",
+        "sql": "SELECT method,actor,evidence,input_sha,created_at FROM analyses WHERE id=$1"
+      },
+      {
+        "title": "Saved numerical result",
+        "layout": "record",
+        "sql": "SELECT result->>'n' AS valid_observations,result->>'missing' AS missing_observations,result->>'mean' AS mean,result->>'sample_sd' AS sample_sd,result->>'center' AS center,result->>'lower' AS lower_control_limit,result->>'upper' AS upper_control_limit,result->>'mr_upper' AS moving_range_upper,result->>'pp' AS pp,result->>'ppk' AS ppk,result->>'outside_spec' AS outside_spec,result->>'baseline' AS baseline FROM analyses WHERE id=$1"
+      },
+      {
+        "title": "Specification used",
+        "layout": "record",
+        "sql": "SELECT s.revision,s.lower_limit,s.upper_limit,s.reason FROM specifications s JOIN analyses a ON a.specification_id=s.id WHERE a.id=$1"
+      },
+      {
+        "title": "Warnings",
+        "sql": "SELECT jsonb_array_elements_text(COALESCE(result->'warnings','[]'::jsonb)) AS warning FROM analyses WHERE id=$1"
+      },
+      {
+        "title": "Individuals signals",
+        "sql": "SELECT x.* FROM analyses a CROSS JOIN LATERAL jsonb_to_recordset(COALESCE(a.result->'signals','[]'::jsonb)) AS x(row integer,measured_at text,value float8,rule text) WHERE a.id=$1"
+      }
+    ]
+  },
+  {
+    "name": "investigation",
+    "title": "Process investigation record",
+    "for_each": "SELECT id,title FROM actions ORDER BY due",
+    "file": "title",
+    "sections": [
+      {
+        "title": "Action and resolution",
+        "layout": "record",
+        "sql": "SELECT title,owner,due,status,resolution,actor,closed_at FROM actions WHERE id=$1"
+      },
+      {
+        "title": "Measurement source",
+        "layout": "record",
+        "sql": "SELECT s.name,s.source_name,s.source_sha,s.review_due FROM series s JOIN actions a ON a.series_id=s.id WHERE a.id=$1"
+      },
+      {
+        "title": "Recorded notes",
+        "sql": "SELECT n.body,n.actor,n.created_at FROM notes n JOIN actions a ON a.series_id=n.series_id WHERE a.id=$1 ORDER BY n.created_at"
+      }
     ]
   }
 ]

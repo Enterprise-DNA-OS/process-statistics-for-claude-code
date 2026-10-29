@@ -1,0 +1,9 @@
+# Record controls
+
+Run /compliance before the weekly review. It reports missing measurements, fewer than two valid observations, processes without specifications, overdue source retention reviews and series with no saved analysis. Run /attention for overdue investigations and process reviews.
+
+These are record checks. A clear result does not establish legal compliance or statistical fitness. Methods and assumptions are in [methods.md](methods.md). NIST guidance provides the numerical method, not an industry certification. Customer-approved specifications and sampling plans must be supplied. The software has no regulatory release workflow.
+
+When source rows or notes identify people, [NZ Privacy Principle 5](https://www.privacy.org.nz/privacy-principles/5/) requires appropriate safeguards and [Principle 9](https://www.privacy.org.nz/privacy-principles/9/) limits unnecessary retention. Sources checked 29 October 2026. Import requires a review date, not an invented statutory retention period. Overdue reviews prompt the operator to decide whether records remain necessary. Nothing deletes automatically. This does not implement every privacy obligation or determine whether NZ law applies.
+
+The CLI does not contact external services. Generated private reports and backups use private POSIX file permissions; Windows access depends on the host ACL. Public database access is revoked in the migration. The database owner remains a trusted operator with full access. Shared deployment needs authentication, authorisation, backups, encryption and operating controls designed for that business. Actor text is an operator declaration, not authenticated identity. Audit entries are editable by the database owner and are not tamper-proof evidence. Never import secret keys, patient records or unnecessary personal data.

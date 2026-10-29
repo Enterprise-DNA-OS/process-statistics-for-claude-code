@@ -1,0 +1,42 @@
+[
+  {
+    "question": "Which processes have overdue investigations and an overdue process review?",
+    "command": "weekly-review"
+  },
+  {
+    "question": "Which imported series have missing measurements?",
+    "command": "compliance"
+  },
+  {
+    "question": "Which later observations break the limits from our saved baseline?",
+    "command": "control-chart --series=\"Fill week\" --baseline=<saved-id>"
+  },
+  {
+    "question": "Which shift contains the largest observed fill value?",
+    "command": "batches --series=\"Fill week\""
+  },
+  {
+    "question": "How many valid observations support this capability number?",
+    "command": "capability --series=\"Fill week\""
+  },
+  {
+    "question": "Which saved results still refer to the previous specification revision?",
+    "command": "analyses, then draft-analysis --analysis=<saved-id>"
+  },
+  {
+    "question": "Which imports came from the same source and mapping fingerprints?",
+    "command": "imports"
+  },
+  {
+    "question": "Who recorded a specification change and why?",
+    "command": "specifications"
+  },
+  {
+    "question": "Which source records are due for a retention review?",
+    "command": "compliance"
+  },
+  {
+    "question": "Which investigations are closed with recorded evidence?",
+    "command": "actions"
+  }
+]
